@@ -115,7 +115,7 @@ def login():
                 else:
                     subject = 'New User Login'
                     body = f'A user with username "{user.username}" has logged in.'
-                    admin_emails = ['busangavanyetariro42@gmail.com', 'machinguramalvint@gmail.com', 'kutadzaushenigel24@gmail.com' ]  
+                    admin_emails = [admins email address]  
                     send_email(subject, body, admin_emails)
                     SocketIO.emit('user_activity', {'username': user.username, 'role': user.role}, room='all')
                     return redirect(url_for('admin'))
@@ -124,7 +124,7 @@ def login():
                 
                 subject = 'Suspicious Login Attempt'
                 body = f'A user with username "{username}" has tried to log in more than three times.'
-                admin_emails = ['busangavanyetariro42@gmail.com', 'machinguramalvint@gmail.com', 'kutadzaushenigel24@gmail.com']  
+                admin_emails = ["admins email address"]  
                 send_email(subject, body, admin_emails)
 
                 flash('Too many failed login attempts. Please contact the administrator.', category='error')
