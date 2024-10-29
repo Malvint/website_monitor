@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+
+        window.addEventListener('beforeunload', function() {
+          socket.emit('user_reload', { username: '{{ current_user.username }}' });
+        });
+
+
+        function performDownload(fileName) {
+          var activity = `Has downloaded the file: ${fileName}`;
+          socket.emit('user_download', { username: '{{ current_user.username }}', file_name: fileName });
+        }
+        
+        
+        function downloadImage() {
+          var imageUrl = "static\\downloads\\kali-purple-16x9.png";
+          var fileName = "kali-purple-16x9.png";
+          var link = document.createElement("a");
+          link.setAttribute("href", imageUrl);
+          link.setAttribute("download", fileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          performDownload(fileName);
+        }
+        
+        function downloadMusic() {
+          var musicUrl = "{{ url_for('static', filename='music/VITAA_&_SLIMANE_-_Avant_toi_(Clip_Officiel).mp3') }}";
+          var fileName = "VITAA_&_SLIMANE_-_Avant_toi_(Clip_Officiel).mp3";
+          var link = document.createElement("a");
+          link.setAttribute("href", musicUrl);
+          link.setAttribute("download", fileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          performDownload(fileName);
+        }
+        
+        socket.on('user_scroll', function(data) {
+          var table = document.getElementById('user-activity-table');
+          var row = table.insertRow(-1);
+          var usernameCell = row.insertCell(0);
+          var scrollsCell = row.insertCell(1);
+
+          usernameCell.textContent = data.username;
+          scrollsCell.textContent = data.scrolls;
+        });
+
+
+        function logout() {
+          socket.emit('user_logout', {
+              username: '{{ current_user.username }}',
+              role: '{{ current_user.role }}'
+          });
+          window.location.href = '{{ url_for("logout") }}';
+        }
+      
+       
+
+    </script>
+    <style>
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 20%;
+        }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-image: url('static/images/2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+          }
+
+        form {
+          background-color: smoke-white;
+          background-image: url('static/images/1.jpg')
+          padding: 20px;
+          border-radius: 5px;
+          border-style: solid;
+          align: center;
+          padding: 50;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        
+          
+        header {
+          background-color: rgba(76, 175, 80, 0.8);
+          padding: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          z-index: 999;
+        }
+        
+        header .dropdown {
+          position: relative;
+          margin-right: 20px;
+          right: 90%;
+          top: 100%;
+        }
+        
+        header .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: rgba(124, 165, 126, 0.8);
+          min-width: 160px;
+          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+          z-index: 1;
+          left: 0;
+          top: 100%;
+        }
+        
+        header .dropdown-content a {
+          color: white;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+        }
+        
+        header .dropdown-content a:hover {
+          background-color: white;
+          color: black;
+        }
+        
+        header .dropdown:hover .dropdown-content {
+          display: block;
+        }
+        
+        .logout-link {
+          color: #fff;
+          text-decoration: none;
+          margin-right: 20px;
+          transition: color 0.3s;
+        }
+        
+        .logout-link:hover {
+          color: #dbc669;
+        }
+        
+        h1 {
+          font-family: 'Poppins', sans-serif;
+          color: #fff;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+          margin: 0;
+          flex-grow: 1;
+          text-align: center;
+        }
+        
+        .o {
+          h1 {
+          font-family: 'Poppins', sans-serif;
+          color: #fff;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+          margin: 0;
+          flex-grow: 1;
+          text-align: center;
+        }
+        
+        }
+        
+        a {
+          background-color: rgba(76, 175, 79, 0.295);
+          color: #fff;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          text-decoration: none;
+          display: inline-block;
+          margin-right: 10px;
+          transition: background-color 0.3s;
+        }
+        
+        a:hover {
+          background-color: rgba(247, 229, 221, 0.363);
+          color: #000;
+        }
+        
+        #frame-container {
+          margin-top: 70px;
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          height: calc(100vh - 120px);
+          overflow-y: auto;
+        }
+        
+        .frame {
+          flex-basis: 45%;
+          border: 1px solid #ddd;
+          padding: 15px;
+          margin-bottom: 20px;
+          border-radius: 5px;
+          background-color: #6264607a;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          color: white;
+        }
+        
+        .frame h2 {
+          font-size: 18px;
+          margin-bottom: 10px;
+          background-color: #4CAF50;
+          padding: 5px;
+          color: white;
+          text-align: center;
+        }
+        
+        .contact-info {
+          text-align: center;
+          margin-top: 20px;
+          color: #fff;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .contact-info p {
+          margin-bottom: 5px;
+        }
+        
+        footer {
+          background-color: rgba(76, 175, 80, 0.8);
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+        
+      @media (max-width: 768px) {
+          header {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+        
+          header .dropdown {
+            margin-bottom: 10px;
+          }
+        
+          h1 {
+            text-align: center;
+          }
+        
+          #frame-container {
+            margin-top: 120px;
+            height: calc(100vh - 170px);
+          }
+        
+          .frame {
+            flex-basis: 100%;
+          }
+        
+          footer {
+            position: static;
+          }
+      }
+      a {
+          background-color: rgba(76, 175, 79, 0.295);
+          color: #fff;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          text-decoration: none;
+          display: inline-block;
+          margin-right: 10px;
+          transition: background-color 0.3s;
+      }
+
+      a:hover {
+          background-color: rgba(247, 229, 221, 0.363);
+          color: #000;
+      }
+      header {
+          background-color: rgba(76, 175, 80, 0.8);
+          padding: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          z-index: 999;
+      }
+
+      header .dropdown {
+          position: relative;
+          margin-right: 20px;
+          right: 90%;
+          top: 100%;
+      }
+
+      header .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: rgba(124, 165, 126, 0.8);
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        left: 0;
+        top: 100%;
+      }
+
+      header .dropdown-content a {
+          color: white;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+      }
+
+      header .dropdown-content a:hover {
+          background-color: white;
+          color: black;
+      }
+
+      header .dropdown:hover .dropdown-content {
+          display: block;
+      }
+
+      .logout-link {
+          color: #fff;
+          text-decoration: none;
+          margin-right: 20px;
+          transition: color 0.3s;
+      }
+
+      .logout-link:hover {
+          color: #dbc669;
+      }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>User Page</h1>
+        <div class="dropdown">
+            <a href="#">Menu</a>
+            <div class="dropdown-content">
+              {% if username %}
+              <a href="{{ url_for('logout') }}">Logout</a>
+              {% else %}
+              <a href="{{ url_for('home') }}">Home</a>
+              <a href="{{ url_for('logout') }}" class="logout-link">Log Out</a>
+              {% endif %}
+            </div>
+          </div>
+          {% if username %}
+          <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+          {% endif %}
+    </header>
+   
+    <form>
+      <div align=center>
+          <img src="static\downloads\kali-purple-16x9.png" alt="Kali" width="400" height="400"> <br>
+        <button onclick="downloadImage(), performDownload()">Download Image</button>
+      </div><br><br>
+    
+      <div align=center>
+        <h2 text-color=white>Music Player</h2>
+
+          <audio id="music-player" controls>
+            <source src="{{ url_for('static', filename='music/VITAA_&_SLIMANE_-_Avant_toi_(Clip_Officiel).mp3') }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+    
+          <div>
+    
+            <img src="static\images\3.jpg" alt="Kali" width="400px" height="400px">
+        
+      </form>
+    
+      </div>
+    </form>  
+    
+
+
+    <footer>
+      © Intelliguard
+    </footer>
+</body>
+</html>

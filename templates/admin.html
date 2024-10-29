@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+  <script>
+    var socket = io();
+
+
+
+    
+
+    socket.on('user_activity', function(data) {
+      
+      var currentDateTime = new Date().toLocaleString();
+      var activityElement = document.createElement('div');
+      activityElement.textContent = data.role + ": " + data.username  + ' has logged in...' + ' @ ' + currentDateTime;
+      document.getElementById('user-activity-container').appendChild(activityElement);
+    });
+
+    socket.on('user_download', (data) => {
+      const currentDateTime = new Date().toLocaleString();
+      const activityElement = document.createElement('div');
+      activityElement.textContent = `User ${data.username} downloaded the file: ${data.file_name} @ ${currentDateTime}`;
+      document.getElementById('user-activity-container').appendChild(activityElement);
+    });
+    
+    socket.on('user_scroll', (data) => {
+      const currentDateTime = new Date().toLocaleString();
+      const activityElement = document.createElement('div');
+      activityElement.textContent = `User ${data.username} scrolled to position: ${data.scroll_position} @ ${currentDateTime}`;
+      document.getElementById('user-activity-container').appendChild(activityElement);
+    });
+    
+
+
+    socket.on('user_reload', function(data) {
+      
+      var currentDateTime = new Date().toLocaleString();
+      var activityElemen = document.createElement('div');
+      activityElemen.textContent = data.role + ": " + data.username  + ' has reloaded the page...' + ' @ ' + currentDateTime;
+      document.getElementById('user-activity-containe').appendChild(activityElemen);
+    });
+
+
+    
+   
+    function updateUserActivityUI(username, activity) {
+      const activityContainer = document.getElementById('user-activity-container');
+      const activityItem = document.createElement('div');
+      activityItem.textContent = `${username}: ${activity}`;
+      activityContainer.appendChild(activityItem);
+    }
+    
+    function updateUserDownloadUI(username, downloads) {
+      const downloadsContainer = document.getElementById(`${username}-downloads`);
+      downloadsContainer.innerHTML = '';
+    
+      downloads.forEach(download => {
+        const downloadItem = document.createElement('div');
+        downloadItem.textContent = `Downloaded file: ${download.file_name} (${download.timestamp})`;
+        downloadsContainer.appendChild(downloadItem);
+      });
+    }
+    
+    
+    function updateUserScrollUI(username, scrolls) {
+      const scrollsContainer = document.getElementById(`${username}-scrolls`);
+      scrollsContainer.innerHTML = '';
+    
+      scrolls.forEach(scroll => {
+        const scrollItem = document.createElement('div');
+        scrollItem.textContent = `Scroll position: ${scroll.scroll_position} (${scroll.timestamp})`;
+        scrollsContainer.appendChild(scrollItem);
+      });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+  
+      let pageRefreshCount = localStorage.getItem('pageRefreshCount') || 0;
+    
+      pageRefreshCount++;
+      localStorage.setItem('pageRefreshCount', pageRefreshCount);
+   
+      const pageRefreshCountElement = document.getElementById('page-refresh-count');
+      if (pageRefreshCountElement) {
+        pageRefreshCountElement.textContent = `Page has been refreshed ${pageRefreshCount} times.`;
+      } else {
+        console.error('Could not find the element with ID "page-refresh-count"');
+      }
+    
+      console.log('Page refresh count:', pageRefreshCount);
+    });
+  
+ 
+  function isLogout() {
+      return true; 
+  }
+  
+
+
+  </script>
+
+  <style>
+      body {
+        font-family: 'Montserrat', sans-serif;
+        background-image: url('static/images/2.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 0;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      header {
+        background-color: rgba(76, 175, 80, 0.8);
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 999;
+      }
+
+      header .dropdown {
+        position: relative;
+        margin-right: 20px;
+        right: 90%;
+        top: 100%;
+      }
+
+      header .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: rgba(124, 165, 126, 0.8);
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        left: 0;
+        top: 100%;
+      }
+
+      header .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      header .dropdown-content a:hover {
+        background-color: white;
+        color: black;
+      }
+
+      header .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .logout-link {
+        color: #fff;
+        text-decoration: none;
+        margin-right: 20px;
+        transition: color 0.3s;
+      }
+
+      .logout-link:hover {
+        color: #dbc669;
+      }
+
+      h1 {
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        margin: 0;
+        flex-grow: 1;
+        text-align: center;
+      }
+
+      .o {
+        h1 {
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        margin: 0;
+        flex-grow: 1;
+        text-align: center;
+        }
+
+      }
+
+      a {
+        background-color: rgba(76, 175, 79, 0.295);
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin-right: 10px;
+        transition: background-color 0.3s;
+      }
+
+      a:hover {
+        background-color: rgba(247, 229, 221, 0.363);
+        color: #000;
+      }
+
+      #frame-container {
+        margin-top: 70px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        height: calc(100vh - 120px);
+        overflow-y: auto;
+      }
+
+      .frame {
+        flex-basis: 45%;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        background-color: #6264607a;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        color: white;
+      }
+
+      .frame h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        background-color: #4CAF50;
+        padding: 5px;
+        color: white;
+        text-align: center;
+      }
+
+      .contact-info {
+        text-align: center;
+        margin-top: 20px;
+        color: #fff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .contact-info p {
+        margin-bottom: 5px;
+      }
+
+      footer {
+        background-color: rgba(76, 175, 80, 0.8);
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+
+      @media (max-width: 768px) {
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        header .dropdown {
+          margin-bottom: 10px;
+        }
+
+        h1 {
+          text-align: center;
+        }
+
+        #frame-container {
+          margin-top: 120px;
+          height: calc(100vh - 170px);
+        }
+
+        .frame {
+          flex-basis: 100%;
+        }
+
+        footer {
+          position: static;
+        }
+      }
+  </style> 
+</head>
+<body>
+  <header>
+    <h1>Admin Panel</h1>
+    <div class="dropdown">
+      <a href="#">Menu</a>
+      <div class="dropdown-content">
+        {% if username %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('logout') }}" class="logout-link">Log Out</a>
+        {% endif %}
+      </div>
+    </div>
+    {% if username %}
+    <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+    {% endif %}
+  </header>
+
+  <div id="frame-container">
+    <div class="frame" id="user-analytics">
+      <h2>User Analytics</h2>
+      <a class= "o" href="{{ url_for('view_users') }}">View all users</a> <br><br>
+      <a href="{{ url_for('logged_in_users') }}">View logged in users</a>
+      <ul id="logged-in-users-list"></ul> 
+
+    <div>
+      <p>Total Users: {{ user_count }}</p>
+      <p>Active Users: {{ active_users }}</p>
+    </div>
+
+  </div>
+
+  <div class="frame" id="user-activity"> 
+    <h2>User Activity</h2>
+    <div id="user-activity-container"></div>
+    <div id="user-activity-containe"></div>
+
+    <div>
+      <p id="page-refresh-count"></p>
+    </div>
+
+
+  </div>
+
+  <footer>
+    © Intelliguard
+  </footer>
+
+</body>
+</html>

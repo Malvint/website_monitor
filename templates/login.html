@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+    <script>    
+        var socket = io();
+
+        function performUserActivity() {
+            var user = document.getElementById("username").value;
+            var activity = user + " has logged in......";
+            socket.emit('user_activity', { activity: activity, username: user });
+        }
+
+    </script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-image: url('static/images/2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+          background-color: #4CAF50;
+          padding: 15px;
+          color: white;
+          text-align: center;
+        }
+
+        form {
+          background-color: white;
+          padding: 20px;
+          border-radius: 5px;
+          border-style: solid;
+          align: center;
+          padding: 50;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+          display: block;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+
+        input[type=text], input[type=password] {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          margin-bottom: 10px;
+        }
+
+        input[type=submit] {
+          background-color: #4CAF50;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          width: 100%;
+        }
+
+        input[type=submit]:hover {
+          background-color: #45a049;
+         }
+        header .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: rgba(124, 165, 126, 0.8);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            left: 0;
+        }
+
+        header .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        header .dropdown-content a:hover {
+            background-color: white;
+            color: black;
+        }
+
+        header .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .logout-link {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+            transition: color 0.3s;
+        }
+
+        .logout-link:hover {
+            color: #dbc669;
+        }
+        header {
+        width: 100%;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        header .dropdown {
+            display: inline-block;
+            position: relative;
+        }
+        .logout-link {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+            transition: color 0.3s;
+        }
+
+        .logout-link:hover {
+            color: #dbc669;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+            text-align: center;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            margin-top: 80px;
+        }
+
+        a {
+            background-color: rgba(76, 175, 80, 0.8);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: rgba(219, 198, 105, 0.8);
+            color: #000;
+        }
+
+        .content {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-top: 20px;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .contact-info p {
+            margin-bottom: 5px;
+        }
+
+        footer {
+            background-color: rgba(76, 175, 80, 0.8);
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            header {
+            flex-direction: column;
+            align-items: flex-start;
+            }
+
+            header .dropdown {
+            margin-bottom: 10px;
+            }
+
+            h1 {
+            margin-top: 100px;
+            }
+
+            footer {
+            position: static;
+            }
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+            text-align: center;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+  
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            border-style: solid;
+            align: center;
+            padding: 50;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+  
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+  
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+  
+      input[type=submit] {
+          background-color: #4CAF50;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          width: 100%;
+      }
+  
+      input[type=submit]:hover {
+          background-color: #45a049;
+      }
+  
+      p.error {
+          color: red;
+          font-weight: bold;
+          text-align: center;
+      }
+    </style>
+    
+</head>
+<body>
+    <header>
+        <div class="dropdown">
+            <a href="#">Menu</a>
+            <div class="dropdown-content">
+              {% if username %}
+              <a href="{{ url_for('logout') }}">Logout</a>
+              {% else %}
+              <a href="{{ url_for('home') }}">Home</a>
+              <a href="{{ url_for('signup') }}">Sign Up</a>
+              {% endif %}
+            </div>
+          </div>
+    </header>
+    <h1>Login</h1> 
+    {%if error %}
+    <p style="color:red ;">{{ error }}</p>
+    {% endif %}
+    
+    <form method="POST" action="/login" >
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required> <br> <br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required> <br> <br>
+
+        <input type="submit" value="login">
+
+    </form>
+    <footer>
+        © Intelliguard
+      </footer>
+</body>
+</html>
