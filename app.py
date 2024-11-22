@@ -61,12 +61,12 @@ def requires_role(role):
 def send_email(subject, body, admin_emails):
     msg = MIMEText(body)
     msg['Subject'] = subject
-    msg['From'] = 'sehmaluva@gmail.com'
+    msg['From'] = ''
     msg['To'] = ', '.join(admin_emails)
     
     with smtplib.SMTP('smtp.gmail.com',587) as smtp:
         smtp.starttls()
-        smtp.login('sehmaluva@gmail.com', 'aont oega seoh lekf')
+        smtp.login()
         smtp.send_message(msg)
 
        
@@ -107,7 +107,7 @@ def login():
                 if user.role == 'user':
                     subject = 'New User Login'
                     body = f'A user with username "{user.username}" has logged in.'
-                    admin_emails = ['busangavanyetariro42@gmail.com', 'machinguramalvint@gmail.com', 'kutadzaushenigel24@gmail.com']  
+                    admin_emails = []  
                     send_email(subject, body, admin_emails)
                     SocketIO.emit('user_activity', {'username': user.username, 'role': user.role}, room='all')
 
@@ -240,7 +240,7 @@ def signup():
                 
                 subject = 'New User Signup'
                 body = f'''A new user has signed up with the following details: Username: {username} Email: {email} Role: {role}'''
-                admin_emails = ['busangavanyetariro42@gmail.com', 'machinguramalvint@gmail.com' , 'kutadzaushenigel24@gmail.com'] 
+                admin_emails = [] 
                 send_email(subject, body, admin_emails)
 
                 SocketIO.emit("New user created: {username} (Role: {role})", room='all')
