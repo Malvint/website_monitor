@@ -1,4 +1,4 @@
-#"This is a web application that can mov=nitor the aactivies or action perfomed by a user in real time."
+#"This is a web application that can monitor the aactivies or action perfomed by a user in real time."
 #"It has two types of users, adminstrator and normal user. "
 
 #"The adminstrator can vies the activies that a normal user is perfoming in realtime using socketio library."
